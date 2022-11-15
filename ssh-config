@@ -1,0 +1,6 @@
+Host boada
+	HostName boada.ac.upc.edu
+	User par1220
+	Port 22
+	ForwardX11 yes
+	ForwardX11Trusted yes

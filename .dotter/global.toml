@@ -1,0 +1,18 @@
+[helpers]
+
+[default]
+depends = []
+
+[default.files]
+"alacritty.yml" = "~/.config/alacritty/alacritty.yml"
+"code-flags.conf" = "~/.config/code-flags.conf"
+"fuzzel.ini" = "~/.config/fuzzel/fuzzel.ini"
+git-config = "~/.gitconfig"
+"mpv.conf" = "~/.config/mpv/mpv.conf"
+ssh-config = "~/.ssh/config"
+sway-config = "~/.config/sway/config"
+swaylock-config = "~/.config/swaylock/config"
+waybar-config = "~/.config/waybar/config"
+"waybar-style.css" = "~/.config/waybar/style.css"
+
+[default.variables]
