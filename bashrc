@@ -7,7 +7,7 @@
 
 alias upcdown='rclone copy upc:/assig ~/assig/ --drive-acknowledge-abuse -P'
 alias upcup='rclone copy ~/assig/ upc:/assig/ --drive-acknowledge-abuse -P'
-alias ls='ls --color=auto'
+alias ls='ls --color=auto -la'
 alias swayconf='nvim ~/.config/sway/config'
 #PS1='[\u@\h \W]\$ '
 eval "$(starship init bash)"
