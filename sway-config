@@ -8,8 +8,10 @@ default_border pixel 2
 assign [class="firefox"] 1
 for_window [app_id="^chrome-.*"] shortcuts_inhibitor disable
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec --no-startup-id nm-applet --indicator
+exec nm-applet --indicator
+exec blueman-applet
 exec_always autotiling
+exec rfkill block bluetooth
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -74,6 +76,16 @@ exec swayidle -w before-sleep 'swaylock -f -i `find $wallpapers_path -type f | s
 	accel_profile "adaptive"
 	middle_emulation enabled
 	pointer_accel 0.3
+   }
+
+   input 1356:3302:Wireless_Controller_Touchpad {
+	natural_scroll enabled
+	dwt enabled
+	tap enabled
+	accel_profile "adaptive"
+	middle_emulation enabled
+	pointer_accel 0.1
+
    }
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
