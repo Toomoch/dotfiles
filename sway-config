@@ -132,7 +132,8 @@ exec swayidle -w before-sleep 'swaylock -f -i `find $wallpapers_path -type f | s
 	bindsym --locked XF86MonBrightnessDown exec brightnessctl s 5%-
 	bindsym $mod+Escape exec swaylock -f -i `find $wallpapers_path -type f | shuf -n 1`
 	bindsym print exec --no-startup-id grim -g "$(slurp)" - | wl-copy
-	bindsym Shift+print exec --no-startup-id grim -g "$(slurp)" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y%m%d_%H%M%S.png')
+    bindsym print exec --no-startup-id grim -g "$(slurp)" - | wl-copy && wl-paste > $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y%m%d_%H%M%S.png')
+	#bindsym Shift+print exec --no-startup-id grim -g "$(slurp)" $(xdg-user-dir PICTURES)/$(date +'screenshot_%Y%m%d_%H%M%S.png')
 #"<" altgr+shift+z
 #">" altgr+shift+x
 #
