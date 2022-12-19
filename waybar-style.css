@@ -121,8 +121,8 @@ button:hover {
 }
 
 #battery {
-    background-color: #ffffff;
-    color: #000000;
+    color: #ffffff;
+    background-color: #000000;
 }
 
 #battery.charging, #battery.plugged {
@@ -166,7 +166,7 @@ label:focus {
 }
 
 #backlight {
-    background-color: #90b1b1;
+    background-color: rgb(0, 0, 0);
 }
 
 #network {
@@ -205,11 +205,13 @@ label:focus {
 }
 
 #temperature {
-    background-color: #f0932b;
+    color: #f0932b;
+    background-color: rgb(0, 0, 0);
 }
 
 #temperature.critical {
-    background-color: #eb4d4b;
+    color: #eb4d4b;
+    background-color: rgb(0, 0, 0);
 }
 
 #tray {
