@@ -77,8 +77,18 @@ exec swayidle -w before-sleep 'swaylock -f -i `find $wallpapers_path -type f | s
 	middle_emulation enabled
 	pointer_accel 0.3
    }
-
+#Dualsense Bluetooth
    input 1356:3302:Wireless_Controller_Touchpad {
+	natural_scroll enabled
+	dwt enabled
+	tap enabled
+	accel_profile "adaptive"
+	middle_emulation enabled
+	pointer_accel 0.1
+
+   }
+#Dualsense USB
+   input 1356:3302:Sony_Interactive_Entertainment_Wireless_Controller_Touchpad {
 	natural_scroll enabled
 	dwt enabled
 	tap enabled
