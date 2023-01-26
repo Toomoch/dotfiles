@@ -7,7 +7,7 @@
     // Choose the order of the modules
     "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
     "modules-center": ["custom/media"],
-    "modules-right": ["tray", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "keyboard-state", "battery", "battery#bat2", "clock"],
+    "modules-right": ["tray", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "keyboard-state", "battery", "battery#bat2", "clock","custom/power"],
     // Modules configuration
     // "sway/workspaces": {
     //     "disable-scroll": true,
@@ -154,6 +154,10 @@
         "on-scroll-up": "playerctl next",
         "on-scroll-down": "playerctl previous",
         "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null", // Script in resources/custom_modules folder
+    },
+    "custom/power": {
+        "format": "",
+        "on-click": "swaynag -t warning -m ' Power Menu' -b 'Logout' 'swaymsg exit' -b 'Suspend' 'systemctl suspend' -b 'Poweroff' 'systemctl poweroff' -b 'Reboot' 'systemctl reboot' -b 'Reboot to UEFI' 'systemctl reboot --firmware-setup' -b 'Reboot to Windows' 'systemctl reboot --boot-loader-entry=auto-windows' --background=#000000 --text=#FFFFFF --button-text=#FFFFFF --button-background=#000000 --button-border=#FFFFFF --border-bottom-size=0 --message-padding=0 -font 'Rubik'"
     }
 }
 
