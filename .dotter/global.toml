@@ -16,5 +16,9 @@ depends = []
 "waybar-style.css" = "~/.config/waybar/style.css"
 "bashrc" = "~/.bashrc"
 "bash_profile" = "~/.bash_profile"
+"gtk-3.0-settings.ini" = "~/.config/gtk-3.0/settings.ini"
+"gtkrc-2.0" = "~/.gtkrc-2.0"
+"index.theme" = "~/.icons/default/index.theme"
+"xsettingsd.conf" = "~/.config/xsettingsd/xsettingsd.conf"
 
 [default.variables]
