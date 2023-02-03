@@ -3,6 +3,7 @@
 # Copy this to ~/.config/sway/config and edit it to your liking.
 #
 # Read `man 5 sway` for a complete reference.
+exec_always configure-gtk
 gaps inner 5
 default_border pixel 2
 assign [class="firefox"] 1
@@ -10,7 +11,7 @@ for_window [app_id="^chrome-.*"] shortcuts_inhibitor disable
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec nm-applet --indicator
 exec blueman-applet
-exec_always autotiling
+exec_always autotiling-rs
 exec rfkill block bluetooth
 ### Variables
 #
@@ -260,6 +261,7 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
+exec dbus-sway-environment
 #exec_always nwg-panel
 #
 # Status Bar:
