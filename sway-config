@@ -3,7 +3,7 @@
 # Copy this to ~/.config/sway/config and edit it to your liking.
 #
 # Read `man 5 sway` for a complete reference.
-exec_always configure-gtk
+#exec_always configure-gtk
 gaps inner 5
 default_border pixel 2
 assign [class="firefox"] 1

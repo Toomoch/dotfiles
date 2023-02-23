@@ -4,23 +4,6 @@
 
 { config, pkgs, ... }:
 let
-  configure-gtk-static = pkgs.writeTextFile {
-    name = "configure-gtk-static";
-    destination = "/bin/configure-gtk-static";
-    executable = true;
-    text = let
-      schema = pkgs.gsettings-desktop-schemas;
-      datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-    in ''
-      export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
-      gnome_schema="org.gnome.desktop.interface"
-      gsettings set $gnome-schema gtk-theme 'adw-gtk3-dark'
-      gsettings set $gnome-schema icon-theme 'Papirus-Dark'
-      gsettings set $gnome-schema cursor-theme 'Adwaita'
-      gsettings set $gnome-schema font-name 'Rubik 11'
-      gsettings set $gnome_schema color-scheme 'prefer-dark'
-    '';
-  };
 
   swayConfig = pkgs.writeText "greetd-sway-config" ''
     exec_always configure-gtk-static
@@ -52,40 +35,10 @@ let
     '';
   };
 
-  # currently, there is some friction between sway and gtk:
-  # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
-  # the suggested way to set gtk settings is with gsettings
-  # for gsettings to work, we need to tell it where the schemas are
-  # using the XDG_DATA_DIR environment variable
-  # run at the end of sway config
-  configure-gtk = pkgs.writeTextFile {
-    name = "configure-gtk";
-    destination = "/bin/configure-gtk";
-    executable = true;
-    text = let
-      schema = pkgs.gsettings-desktop-schemas;
-      datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-    in ''
-      export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
-      config="/home/arnau/.config/gtk-3.0/settings.ini"
-      if [ ! -f "$config" ]; then exit 1; fi
-
-      gnome_schema="org.gnome.desktop.interface"
-      gtk_theme="$(grep 'gtk-theme-name' "$config" | sed 's/.*\s*=\s*//')"
-      icon_theme="$(grep 'gtk-icon-theme-name' "$config" | sed 's/.*\s*=\s*//')"
-      cursor_theme="$(grep 'gtk-cursor-theme-name' "$config" | sed 's/.*\s*=\s*//')"
-      font_name="$(grep 'gtk-font-name' "$config" | sed 's/.*\s*=\s*//')"
-      gsettings set "$gnome_schema" gtk-theme "$gtk_theme"
-      gsettings set "$gnome_schema" icon-theme "$icon_theme"
-      gsettings set "$gnome_schema" cursor-theme "$cursor_theme"
-      gsettings set "$gnome_schema" font-name "$font_name"
-      gsettings set $gnome_schema color-scheme 'prefer-dark'
-    '';
-  };
-
 in {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    <home-manager/nixos>
   ];
 
   # Bootloader.
@@ -110,15 +63,15 @@ in {
   i18n.defaultLocale = "en_GB.UTF-8";
 
   i18n.extraLocaleSettings = {
-    LC_ADDRESS = "es_ES.UTF-8";
-    LC_IDENTIFICATION = "es_ES.UTF-8";
-    LC_MEASUREMENT = "es_ES.UTF-8";
-    LC_MONETARY = "es_ES.UTF-8";
-    LC_NAME = "es_ES.UTF-8";
-    LC_NUMERIC = "es_ES.UTF-8";
-    LC_PAPER = "es_ES.UTF-8";
-    LC_TELEPHONE = "es_ES.UTF-8";
-    LC_TIME = "es_ES.UTF-8";
+    LC_ADDRESS = "ca_ES.UTF-8";
+    LC_IDENTIFICATION = "ca_ES.UTF-8";
+    LC_MEASUREMENT = "ca_ES.UTF-8";
+    LC_MONETARY = "ca_ES.UTF-8";
+    LC_NAME = "ca_ES.UTF-8";
+    LC_NUMERIC = "ca_ES.UTF-8";
+    LC_PAPER = "ca_ES.UTF-8";
+    LC_TELEPHONE = "ca_ES.UTF-8";
+    LC_TIME = "ca_ES.UTF-8";
   };
 
   # Configure keymap in X11
@@ -134,7 +87,7 @@ in {
   users.users.arnau = {
     isNormalUser = true;
     description = "Arnau";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
     packages = with pkgs; [ ];
   };
 
@@ -167,10 +120,7 @@ in {
     go
     xcur2png
     networkmanagerapplet
-    xfce.thunar
-    xfce.thunar-volman
     gvfs
-    xfce.thunar-archive-plugin
     vscode
     gnome.file-roller
     scrcpy
@@ -186,7 +136,6 @@ in {
     lxappearance
     polkit_gnome
     dbus-sway-environment
-    configure-gtk
     nixfmt
     usbutils
     libva-utils
@@ -196,7 +145,19 @@ in {
     grim
     slurp
     wl-clipboard
-    android-tools
+    gamescope
+    oversteer
+    webcord
+    legendary-gl
+    wineWowPackages.stable
+    obs-studio
+    dxvk
+    heroic
+    headsetcontrol
+    neovim
+    rclone
+    podman-compose
+    distrobox
   ];
 
   fonts.fonts = with pkgs; [ fira-code fira-code-symbols rubik font-awesome ];
@@ -209,9 +170,68 @@ in {
   # };
 
   # Programs:
+
+  #Thumar
+  programs.thunar.enable = true;
+  programs.thunar.plugins = with pkgs.xfce; [
+    thunar-archive-plugin
+    thunar-volman
+  ];
+
+  #Sway
   programs.sway.enable = true;
   programs.sway.wrapperFeatures.gtk = true;
   programs.dconf.enable = true;
+
+  #Steam
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall =
+      true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall =
+      true; # Open ports in the firewall for Source Dedicated Server
+  };
+
+  #ADB
+  programs.adb.enable = true;
+
+  #home-manager
+  home-manager.useGlobalPkgs = true;
+  home-manager.users.arnau = { pkgs, ... }: {
+
+    home.pointerCursor = {
+      name = "Adwaita";
+      package = pkgs.gnome.adwaita-icon-theme;
+      size = 24;
+      x11 = {
+        enable = true;
+        defaultCursor = "Adwaita";
+      };
+      gtk.enable = true;
+    };
+
+    gtk = {
+      enable = true;
+      theme = {
+        name = "adw-gtk3-dark";
+        package = pkgs.adw-gtk3;
+      };
+      iconTheme = {
+        name = "Papirus-Dark";
+        package = pkgs.papirus-icon-theme;
+      };
+      cursorTheme = {
+        name = "Adwaita";
+        package = pkgs.gnome.adwaita-icon-theme;
+      };
+      font = {
+        name = "Rubik";
+        package = pkgs.rubik;
+        size = 11;
+      };
+    };
+    home.stateVersion = "22.11";
+  };
 
   # List services that you want to enable:
 
@@ -247,6 +267,9 @@ in {
   services.gvfs.enable = true;
   services.dbus.enable = true;
 
+  #thumbler
+  services.tumbler.enable = true;
+
   #flatpak
   services.flatpak.enable = true;
 
@@ -258,13 +281,32 @@ in {
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall =
-      true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall =
-      true; # Open ports in the firewall for Source Dedicated Server
+  #G29 wheel
+  hardware.new-lg4ff.enable = true;
+  services.udev.packages = with pkgs; [ oversteer ];
+
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
   };
+
+  #OpenRGB
+  services.hardware.openrgb.enable = true;
+
+  #Gnome Keyring
+  services.gnome.gnome-keyring.enable = true;
+
+  #Arctis 9
+  services.udev.extraRules = ''
+    KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12c2", TAG+="uaccess"
+  '';
 
   #services.greetd = {
   #  enable = true;
