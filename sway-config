@@ -29,7 +29,6 @@ set $term alacritty
 # on the original workspace that the command was run on.
 #set $menu dmenu_path | dmenu | xargs swaymsg exec --
 set $menu fuzzel
-set $wallpaper $HOME/Pictures/wallpapers/2023-Ferrari-499P-001-2160.jpg
 
 # Notification Daemon
 exec swaync
@@ -139,9 +138,9 @@ exec swayidle -w before-sleep 'swaylock'
 	bindgesture swipe:4:right workspace prev
 	bindgesture swipe:4:left workspace next
 
-	bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
-    bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-    bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+	bindsym XF86AudioMute exec wpctl set-mute @DEFAULT_SINK@ toggle
+    bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
+    bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
 	bindsym --locked XF86MonBrightnessUp exec brightnessctl s +5%
 	bindsym --locked XF86MonBrightnessDown exec brightnessctl s 5%-
 	bindsym $mod+Escape exec swaylock

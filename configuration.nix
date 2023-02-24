@@ -29,8 +29,8 @@ let
 
     text = ''
       dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-      systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-      systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+      systemctl --user stop pipewire wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
+      systemctl --user start pipewire wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
       ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
     '';
   };
@@ -158,6 +158,8 @@ in {
     rclone
     podman-compose
     distrobox
+    bottles
+    adwaita-qt
   ];
 
   fonts.fonts = with pkgs; [ fira-code fira-code-symbols rubik font-awesome ];
@@ -230,6 +232,14 @@ in {
         size = 11;
       };
     };
+    qt = {
+      enable = true;
+      style = {
+        name = "adwaita-dark";
+        package = pkgs.adwaita-qt;
+      };
+      platformTheme = "gnome";
+    };
     home.stateVersion = "22.11";
   };
 
@@ -250,10 +260,12 @@ in {
   hardware.opengl.driSupport32Bit = true;
 
   #PipeWire
+  security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
+    wireplumber.enable = true;
   };
 
   #Bluetooth
@@ -307,6 +319,8 @@ in {
   services.udev.extraRules = ''
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12c2", TAG+="uaccess"
   '';
+
+  networking.firewall.checkReversePath = false; 
 
   #services.greetd = {
   #  enable = true;
