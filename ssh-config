@@ -4,3 +4,10 @@ Host boada
 	Port 22
 	ForwardX11 yes
 	ForwardX11Trusted yes
+
+	Host ubuntu
+	HostName 192.168.122.16
+	User alumne
+	Port 22
+	ForwardX11 yes
+	ForwardX11Trusted yes

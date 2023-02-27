@@ -11,6 +11,7 @@ for_window [app_id="^chrome-.*"] shortcuts_inhibitor disable
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec nm-applet --indicator
 exec blueman-applet
+exec wpaperd
 exec_always autotiling-rs
 exec rfkill block bluetooth
 ### Variables
