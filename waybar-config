@@ -37,11 +37,8 @@
         "format": "<span style=\"italic\">{}</span>"
     },
     "sway/window": {
-<<<<<<< Updated upstream
-=======
         "format": "{title}",
         "max-length": 50,
->>>>>>> Stashed changes
         "icon": true
     },
     "mpd": {
