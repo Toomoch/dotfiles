@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
 
   swayConfig = pkgs.writeText "greetd-sway-config" ''
@@ -16,29 +16,11 @@ let
       -b 'Reboot' 'systemctl reboot'
   '';
 
-  # bash script to let dbus know about important env variables and
-  # propagate them to relevent services run at the end of sway config
-  # see
-  # https://github.com/emersion/xdg-desktop-portal-wlr/wiki/"It-doesn't-work"-Troubleshooting-Checklist
-  # note: this is pretty much the same as  /etc/sway/config.d/nixos.conf but also restarts  
-  # some user services to make sure they have the correct environment variables
-  dbus-sway-environment = pkgs.writeTextFile {
-    name = "dbus-sway-environment";
-    destination = "/bin/dbus-sway-environment";
-    executable = true;
-
-    text = ''
-      dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-      systemctl --user stop pipewire wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
-      systemctl --user start pipewire wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
-      ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 &
-    '';
-  };
-
 in {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
     <home-manager/nixos>
+    ./home-manager.nix
   ];
 
   # Bootloader.
@@ -46,6 +28,7 @@ in {
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_1;
   networking.hostName = "b450-nix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -87,7 +70,7 @@ in {
   users.users.arnau = {
     isNormalUser = true;
     description = "Arnau";
-    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
+    extraGroups = [ "networkmanager" "wheel" "adbusers" "libvirtd" ];
     packages = with pkgs; [ ];
   };
 
@@ -117,10 +100,7 @@ in {
     papirus-icon-theme
     starship
     pkg-config
-    go
-    xcur2png
     networkmanagerapplet
-    gvfs
     vscode
     gnome.file-roller
     scrcpy
@@ -133,13 +113,10 @@ in {
     glib
     xdg-utils
     gsettings-desktop-schemas
-    lxappearance
     polkit_gnome
-    dbus-sway-environment
     nixfmt
     usbutils
     libva-utils
-    swaysettings
     swaynotificationcenter
     autotiling-rs
     grim
@@ -160,9 +137,13 @@ in {
     distrobox
     bottles
     adwaita-qt
+    sway-contrib.grimshot
+    mpv
+    virt-manager
+    kooha
   ];
 
-  fonts.fonts = with pkgs; [ fira-code fira-code-symbols rubik font-awesome ];
+  fonts.fonts = with pkgs; [ rubik fira-code fira-code-symbols font-awesome ];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -197,51 +178,7 @@ in {
   #ADB
   programs.adb.enable = true;
 
-  #home-manager
-  home-manager.useGlobalPkgs = true;
-  home-manager.users.arnau = { pkgs, ... }: {
-
-    home.pointerCursor = {
-      name = "Adwaita";
-      package = pkgs.gnome.adwaita-icon-theme;
-      size = 24;
-      x11 = {
-        enable = true;
-        defaultCursor = "Adwaita";
-      };
-      gtk.enable = true;
-    };
-
-    gtk = {
-      enable = true;
-      theme = {
-        name = "adw-gtk3-dark";
-        package = pkgs.adw-gtk3;
-      };
-      iconTheme = {
-        name = "Papirus-Dark";
-        package = pkgs.papirus-icon-theme;
-      };
-      cursorTheme = {
-        name = "Adwaita";
-        package = pkgs.gnome.adwaita-icon-theme;
-      };
-      font = {
-        name = "Rubik";
-        package = pkgs.rubik;
-        size = 11;
-      };
-    };
-    qt = {
-      enable = true;
-      style = {
-        name = "adwaita-dark";
-        package = pkgs.adwaita-qt;
-      };
-      platformTheme = "gnome";
-    };
-    home.stateVersion = "22.11";
-  };
+  
 
   # List services that you want to enable:
 
@@ -282,9 +219,6 @@ in {
   #thumbler
   services.tumbler.enable = true;
 
-  #flatpak
-  services.flatpak.enable = true;
-
   #xdg-portal
   xdg.portal = {
     enable = true;
@@ -307,6 +241,8 @@ in {
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
     };
+    # Enable libvirt
+    libvirtd.enable = true;
   };
 
   #OpenRGB
@@ -320,7 +256,8 @@ in {
     KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1038", ATTRS{idProduct}=="12c2", TAG+="uaccess"
   '';
 
-  networking.firewall.checkReversePath = false; 
+  #Allow all VPN traffic routing
+  networking.firewall.checkReversePath = "loose";
 
   #services.greetd = {
   #  enable = true;
