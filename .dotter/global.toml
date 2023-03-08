@@ -5,7 +5,7 @@ depends = []
 
 [default.files]
 "alacritty.yml" = "~/.config/alacritty/alacritty.yml"
-"code-flags.conf" = "~/.config/code-flags.conf"
+"codium-settings.json" = "~/.config/VSCodium/User/settings.json"
 "fuzzel.ini" = "~/.config/fuzzel/fuzzel.ini"
 "git-config" = "~/.gitconfig"
 "mpv.conf" = "~/.config/mpv/mpv.conf"
