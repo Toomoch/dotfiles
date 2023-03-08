@@ -1,0 +1,7 @@
+{
+    "window.titleBarStyle": "custom",
+    "clangd.fallbackFlags": [
+        "-I${workspaceFolder}/include"
+    ],
+    "files.autoSave": "afterDelay"
+}
