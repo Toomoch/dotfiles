@@ -6,7 +6,7 @@
 
 gaps inner 5
 default_border pixel 2
-assign [class="firefox"] 1
+assign [app_id="firefox"] workspace 1
 for_window [app_id="^chrome-.*"] shortcuts_inhibitor disable
 
 #Startup

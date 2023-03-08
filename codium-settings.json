@@ -3,5 +3,10 @@
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/include"
     ],
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "afterDelay",
+    "redhat.telemetry.enabled": false,
+    "editor.fontFamily": "'Noto Sans Mono','Arimo Nerd Font','Font Awesome 6 Free','Font Awesome 6 Brands','Font Awesome 6 Free Solid'",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "GitHub Dark"
+
 }
